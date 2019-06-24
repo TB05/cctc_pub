@@ -1,0 +1,500 @@
+= Network Reconnaissance and Analysis
+CCTC - Networking
+v1.0, 2018-12-17
+
+//.images
+:slides: true
+:imagesdir: https://git.cybbh.space/electric-boogaloo/public/raw/master/modules/networking/slides/images
+:source-highlighter: highlightjs
+:icons: font
+:title-slide-background-image: slide_title_blk.png
+:revealjs_theme: black
+:revealjs_transition: convex
+:revealjs_backgroundTransition: none
+
+
+== Outcomes
+
+* SKILL CCNE005: Passive Network Information Gathering ¹ ²
+** CCNE005.001 Identify items of interest when performing passive reconnaissance ¹ ²
+** CCNE005.002 Describe passive methods used for network reconnaissance ¹ ²
+*** CCNE005.002.1 Perform information gathering using open source information ²
+*** CCNE005.002.2 Perform information gathering through host configuration analysis ²
+
+* SKILL CCNE006 Network collection devices and relevant data ¹ ²
+** CCNE006.001 Identify sources of network data collection ¹
+** CCNE006.002 Explain network data collection devices and placement ²
+
+* SKILL CCNE007: Passive Network Analysis¹ ²
+** CCNE007.001 Discuss best practices for network traffic analysis ²
+** CCNE007.002 Describe the use of sniffing tools and methods ¹ ²
+*** CCNE007.002.1 Perform real-time network traffic sniffing ²
+
+image::slide_background_blk.png[background, size=100%]
+
+=== Outcomes(Cont.)
+
+** CCNE007.003 Create filters for items of interest when performing packet captures ²
+*** CCNE007.003.1 Identify default characteristics for system identification ²
+*** CCNE007.003.2 Perform traffic analysis using capture tools and filters ¹ ²
+** CCNE007.004 Determine traffic flow through protocol communication analysis ²
+** CCNE007.005 Perform traffic log analysis ²
+
+* SKILL CCNE008: Active Network Reconnaissance and Analysis ¹ ²
+** CCNE008.001 Discuss best practices for network scanning and enumeration ¹ ²
+*** CCNE008.001.1 Describe the use of scanning tools and methods ¹ ²
+*** CCNE008.001.2 Perform real-time network scanning ²
+*** CCNE008.001.3 Perform analysis of network scanning results ²
+
+* SKILL CCNE009: Network Artifact Correlation¹ ²
+** CCNE009.001 Map a network through correlation of relevant network artifacts gathered through reconnaissance and analysis ²
+
+image::slide_background_blk.png[background, size=100%]
+
+== Passive Reconnaissance
+
+ * Gathering information about targets without direct interaction
+ * Not as straight forward and requires more time than active reconnaissance
+ * Lower risk of discovery
+
+image::slide_background_blk.png[background, size=100%]
+
+=== Passive Reconnaissance
+
+ * Involves identifying:
+ ** IP addresses and Sub-Domains
+ ** External and 3rd party sites
+ ** People and Technologies
+ ** Content of Interest
+ ** Vulnerabilities
+
+image::slide_background_blk.png[background, size=100%]
+
+=== Passive Reconnaissance
+
+ * Possible tools for gathering:
+ ** WHOIS queries
+ ** Job site listings
+ ** Phone Numbers
+ ** Google searches
+ ** Passive OS fingerprinting
+
+image::slide_background_blk.png[background, size=100%]
+
+== Passive External Network Reconnaissance
+
+* Information gathered outside of the network using passive methods
+* Allows for more efficient attacks and plans
+
+image::slide_background_blk.png[background, size=100%]
+
+=== Passive External Network Reconnaissance: DNS
+
+* Resolves hostnames to IP addresses
+* RFC 3912
+* WHOIS queries
+
+image::slide_background_blk.png[background, size=100%]
+
+=== Passive External Network Reconnaissance: DIG
+
+* Typically between primary and secondary DNS servers
+* If allowed to transfer externally hostnames, IPs, and IP blocks can be determined
+
+image::slide_background_blk.png[background, size=100%]
+
+=== Passive External Network Reconnaissance: Zone Transfers
+
+* Returns DNS information
+* Supplements base queries
+
+image::slide_background_blk.png[background, size=100%]
+
+=== Passive External Network Reconnaissance: Hosting History
+
+* netcraft
+* wayback machine
+
+image::slide_background_blk.png[background, size=100%]
+
+=== Passive External Network Reconnaissance: Google Searches
+
+* subdomains
+* technologies
+
+image::slide_background_blk.png[background, size=100%]
+
+=== Passive External Network Reconnaissance: Shodan
+
+* Reveals information about technologies, remote access services, improperly configured services, and network infrastructure.
+* When selected can give additional information and applicable vulnerabilities
+
+image::slide_background_blk.png[background, size=100%]
+
+== Fingerprinting and Traffic Sniffing
+
+* Uses variances in the implementation of RFCs for network stacks
+* There is both active and passive scanners
+
+image::slide_background_blk.png[background, size=100%]
+
+=== Fingerprinting and Traffic Sniffing:P0F
+
+* Looks at initial TTL, fragmentation flag, default IP header packet length, window size, and TCP options
+* p0f.fp
+
+image::slide_background_blk.png[background, size=100%]
+
+== Complete before moving on
+
+* [red]#P0f activity#
+
+image::slide_background_blk.png[background, size=100%]
+
+== Network Scanning
+
+* Broadcast Ping and Ping sweep
+* ARP scan
+* SYN scan
+* Full connect scan
+* Null scan
+* FIN scan
+* XMAS tree scan
+* UDP scan
+* Idle scan
+
+image::slide_background_blk.png[background, size=100%]
+
+=== Network Scanning
+
+* Window scan
+* RPC scan
+* list scan
+* IP protocol scan
+* FTP scan
+* decoy scan
+* OS fingerprinting scan
+* version scan
+* Maimon scan
+
+image::slide_background_blk.png[background, size=100%]
+
+=== Network Scanning
+
+* Protocol ping
+* ICMP echo discovery probe
+* Timestamp Discovery Probe
+* Netmask Request Discovery Probe
+* TCP SYN Discovery Ping
+* TCP ACK Discovery Ping
+* UDP Discovery Ping
+* SCTP INIT scan
+
+image::slide_background_blk.png[background, size=100%]
+
+== Network Data Types
+
+* Data Sets
+** Full Packet Capture Data
+** Session Data
+** Statistical Data
+** Packet String Data
+** Alert Data
+** Log Data
+
+image::slide_background_blk.png[background, size=100%]
+
+== Network Data Collection Devices
+
+* Sensors
+** In-line
+** Passive
+
+image::slide_background_blk.png[background, size=100%]
+
+== Methods of Data Collection
+
+* TAP
+* SPAN
+* ARP Spoofing
+
+image::slide_background_blk.png[background, size=100%]
+
+== Network Traffic Sniffing with TCPDump and Wireshark
+
+* What makes traffic capture possible?
+** Libcap
+** WinPcap
+
+image::slide_background_blk.png[background, size=100%]
+
+== Network Traffic Baselining
+
+ * Snapshot of what the network looks like during a time frame
+ * No industry standard
+ * 7 days to establish the initial snapshot
+ * Prerequisite Information
+ ** What devices are on the network
+ ** What ports and protocols are being used
+ * Objectives
+ ** current state and utilization of the network
+ ** Peak network times and port/protocol use
+
+image::slide_background_blk.png[background, size=100%]
+
+== Wireshark DEMO
+
+image::slide_background_blk.png[background, size=100%]
+
+== TCPDump DEMO
+
+image::slide_background_blk.png[background, size=100%]
+
+== Berkley Packet Filters
+
+* Requests a SOCK_RAW socket and setsockopt calls SO_ATTACH_FILTER
+
+----
+sock = socket(PF_PACKET, SOCK_RAW, htons(ETH_P_ALL))
+...
+setsockopt(sock, SOL_SOCKET, SO_ATTACH_FILTER, ...)
+----
+
+image::slide_background_blk.png[background, size=100%]
+
+=== Berkley Packet Filters
+
+* Using BPFs with operators, bitmasking, and TCPDump creates a powerful tool for traffic filtering and parsing.
+
+image::slide_background_blk.png[background, size=100%]
+
+=== Bitwise Masking
+
+ip[0:2] [red]#& 0x0F# > 0x05
+
+image::BPF_Mask1.png[width="50%"]
+
+image::slide_background_blk.png[background, size=100%]
+
+=== Filter Categories
+
+* *most exclusive* - all designated bit values must be set; no others can be set
+* *less exclusive* - all designated bits must be set; others may be set
+* *least exclusive* - at least one of the designated bits must be set; others may be set
+
+image::slide_background_blk.png[background, size=100%]
+
+== Active Network Reconnaissance and Analysis
+
+* Requires the creation of traffic and data. This includes running commands on a compromised host.
+* Hosts are designed to provide information through commands to the users.
+
+image::slide_background_blk.png[background, size=100%]
+
+== Analyze Network Traffic Statistics
+
+* Protocol Hierarchy
+* Conversations
+* Endpoints
+* I/O Graph
+* IPv4 and IPv6 Statistics
+* Expert Information
+
+image::slide_background_blk.png[background, size=100%]
+
+== Anomaly Detection
+
+* Indicator of Attack
+** *Proactive*
+** A series of actions that are suspicious together
+** Focus on Intent
+** Looks for what must happen
+*** Code execution. persistence, lateral movement, etc.
+* Indicator of Compromise
+** *Reactive*
+** Forensic Evidence
+** Provides Information that can change
+*** Malware, IP addresses, exploits, signatures
+
+image::slide_background_blk.png[background, size=100%]
+
+== Indicators
+
+* .exe/executable files
+* NOP sled
+* Repeated Letters
+* Well Known Signatures
+* Mismatched Protocols
+* Unusual traffic
+* Large amounts of traffic/ unusual times
+
+image::slide_background_blk.png[background, size=100%]
+
+== Potential Indicators of Attack
+
+* Destinations
+* Ports
+* Public Servers/DMZs
+* Off-Hours
+* Network Scans
+* Alarm Events
+* Malware Reinfection
+* Remote logins
+* High levels of email protocols
+* DNS queries
+
+image::slide_background_blk.png[background, size=100%]
+
+== Potential Indicators of Compromise
+
+* Unusual traffic outbound
+* Anomalous user login or account use
+* Size of responses for HTML
+* High number of requests for the same files
+* Using non-standard ports/ application-port mismatch
+* Writing changes to the registry/system files
+* DNS requests
+* Unexpected/ unusual patching
+* Unusual tasks
+
+image::slide_background_blk.png[background, size=100%]
+
+== Activity Time!
+
+* Anomaly Detection 1
+
+image::slide_background_blk.png[background, size=100%]
+
+== Types of Malware
+
+* Adware/Spyware
+** large amounts of traffic/ unusual traffic
+** IOA
+*** Destinations
+** IOC
+*** Unusual traffic outbound
+* Virus
+** phishing/ watering hole
+** IOA
+*** Alarm Events, Email protocols
+** IOC
+*** changes to the registry/ system files
+
+image::slide_background_blk.png[background, size=100%]
+
+=== Types of Malware
+
+* Worm
+** phishing/ watering hole
+** IOA
+*** Alarm events
+** IOC
+*** changes to registry/ system files
+* Trojan
+** beaconing
+** IOA
+*** Destinations
+** IOC
+*** Unusual traffic outbound, unusual tasks, changes to registry/ system files
+
+image::slide_background_blk.png[background, size=100%]
+
+=== Types of Malware
+
+* Rootkit
+** IOA
+*** Malware reinfection
+** IOC
+*** anomolous user login/ account use
+* Backdoor
+** IOA
+*** Remote logins
+** IOC
+*** Anomolous user login/ account use
+
+image::slide_background_blk.png[background, size=100%]
+
+=== Types of Malware
+
+* Botnets
+** large amounts of IPs
+** IOA
+*** Destinations, remote logins
+** IOC
+*** Unusual tasks, anomolous user login/ account use
+* Polymorphic and Metamorphic Malware
+** Depends on the malware type/class
+
+image::slide_background_blk.png[background, size=100%]
+
+=== Types of Malware
+
+* Ransomware
+** IOA
+*** Destinations, Ports, Malware reinfection
+** IOC
+*** Unusual traffic outbound, non-standard ports, unusual tasks
+* Mobile Code
+** IOA
+*** Depends on the malware type/class
+
+image::slide_background_blk.png[background, size=100%]
+
+=== Types of Malware
+
+* Information-Stealing Worms
+** phishing/ watering hole, large amounts of traffic/ unusual traffic
+** IOA
+*** Alarm events, Destinations
+** IOC
+*** changes to registry/ system files, Unusual traffic outbound
+* BIOS/ Firmware Malware
+** IOA
+*** Malware reinfection
+** IOC
+*** Depends on the malware type/class
+
+image::slide_background_blk.png[background, size=100%]
+
+== Potential Methods of Detection for IOAs and IOCs
+
+* Display Fliters
+* Follow Streams
+* BPFs
+* Color Coding
+* Hex Outputs
+
+image::slide_background_blk.png[background, size=100%]
+
+== Decoding
+
+* enca
+* chardet
+* iconv
+
+image::slide_background_blk.png[background, size=100%]
+
+== Activity Time!
+
+* DVWA Traffic
+* Anomaly Detection 2
+
+image::slide_background_blk.png[background, size=100%]
+
+== Network Mapping
+
+* Different units and missions may have different standards
+* Diagrams should or may include:
+** Devices
+** Lines
+** Written Information
+** Device Coloring
+** Additional Groupings
+
+image::slide_background_blk.png[background, size=100%]
+
+== Activity Time!
+
+* Mapping a Network
+
+image::slide_background_blk.png[background, size=100%]

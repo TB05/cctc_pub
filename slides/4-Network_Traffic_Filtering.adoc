@@ -1,0 +1,792 @@
+= Network Traffic Filtering
+CCTC - Networking
+Author:  David C. Gresch
+Cyber Common Technical Course
+
+//.images
+:slides: true
+:imagesdir: https://git.cybbh.space/electric-boogaloo/public/raw/master/modules/networking/slides/images
+:source-highlighter: highlightjs
+:icons: font
+:revealjs_theme: black
+:title-slide-background-image: slide_title_blk.png
+:customcss: custom.css
+:revealjs_transition: fade
+:revealjs_backgroundTransition: fade
+image::slide_background_fade.png[background, size=100%]
+
+
+
+[state=smaller_text]
+==   CCNE0012: Filtering Devices & Mechanisms ¹ ²
+.  Discuss filtering device types ¹ +
+.  Explain how filters work at OSI model layers ¹ ² +
+.  Describe directionality limits of packet filters ¹ ² +
+.  Filter packets utilizing network devices ² +
+.  Interpret a data flow diagram given a set of firewall rules ² +
+.  Determine positioning of devices on a network ¹ ² +
+
+
+image::slide_background_fade.png[background, size=100%]
+
+=== CCNE013: Intrusion Detection and Prevention ¹ ²
+[.text-left]
+.   Contrast Intrusion Detection Systems and Intrusion Prevention Systems ¹ ² +
+.   Discuss Signature & Behavioral based detection ² +
+.   Construct advanced IDS / IPS rules ² +
+.  Interpret the effects of IDS / IPS rules on network traffic ² +
+.  Perform traffic log analysis ² +
+
+image::slide_background_fade.png[background, size=100%]
+
+[.stretch]
+
+=== CCNE014: Host Based Filtering ¹ ²
+
+. Describe purpose of netfilter framework in Linux kernel ² +
+. Configure iptables and nftables rules ² +
+. Determine the effect of rules on traffic flows ² +
+. Explain functionality of NAT within iptables & nftables ¹ ² +
+. Contrast host based & network based filtering ¹ ² +
+
+ 1 - Taught in previous (non-CCTC) training
+ 2 - Training material in CCTC not previously taught in prior, formal training
+
+image::slide_background_fade.png[background, size=100%]
+
+
+[.stretch]
+== What are some practical applications of filtering?
+
+For example, we can filter website access on a network via a web proxy server to o ensure only approved websites and content are allowed in and out of a network.
+
+
+image::slide_background_fade.png[background, size=100%]
+
+[.stretch]
+=== Practical applications for filtering
+
+* Email addresses - to block unwanted email and increase productivity
+* Computer applications in an organization environment - for security from vulnerable software
+* MAC filtering - also for security to allow only specific computers access to a network
+* Network Traffic
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+[.stretch]
+=== Why Filter Network Traffic?
+
+
+image::slide_background_fade.png[background, size=100%]
+[.stretch]
+=== Why Filter Network Traffic?
+
+** Decrease load on network infrastructure
+** Ensure data flows in an efficient manner
+** Ensure data gets to intended recipients and only intended recipients
+** Block malicious traffic
+** Obfuscate network internals
+
+image::slide_background_fade.png[background, size=100%]
+== What devices are used to filter traffic?
+
+image::slide_background_fade.png[background, size=100%]
+=== Devices used to filter traffic
+
+* Network Firewalls
+* Routers
+* Switches
+* Proxies
+* Host Based Firewalls
+
+What mechanisms does each device use?
+
+image::slide_background_fade.png[background, size=100%]
+
+=== Mechanisms & layers
+
+[.stretch]
+
+image::T1_Filtering_Devices_Mechanisms&Layer.jpg[width=100%]
+
+image::slide_background_fade.png[background, size=100%]
+[.stretch]
+== Filtering Concepts
+
+* Whitelist vs Blacklist
+
+* Default policies and Implicit and Explicit rules
+
+* Network Device Operation Modes
+** Routed
+** Transparent
+
+
+image::slide_background_fade.png[background, size=100%]
+
+[.stretch]
+=== Filtering Concepts
+
+* Intrusion Defense
+** Intrusion Detection Systems
+** Intrusion Prevention Systems
+
+* Filtering Device Placement
+
+
+
+* Firewall Filtering Methods
+** Stateless (Packet) Filtering
+** Stateful Inspection
+** Application Layer
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+[.stretch]
+== Filtering Device Placement
+
+
+image::T2_genericnet.jpg[width=100%]
+
+image::slide_background_fade.png[background, size=100%]
+[.stretch]
+== Firewall as a filter
+*Firewall Demonstration* +
+{empty} +
+** Packet filtering +
+** Stateful Inspection +
+Application Layer +
+
+
+image::slide_background_fade.png[background, size=100%]
+
+[.stretch]
+=== 1 - Packet Filtering
+
+** As the 'packets' traverse each person, look ONLY at the front of the envelope and the color of the cards to determine if you have rules to prevent this from being passed by you to the next person. If a packet is meant to be dropped, then hold onto it until the end to tell the class what packet was dropped and by what rule.
+
+** Everyone has a default deny for ICMP traffic.
+
+image::slide_background_fade.png[background, size=100%]
+[.stretch]
+=== Firewall Demonstration
+{empty} +
+
+Pink = SSH +
+Orange = HTTP +
+Green = HTTPS +
+Yellow = DNS +
+White = FTP +
+Blue = ICMP +
+
+image::slide_background_fade.png[background, size=100%]
+[.stretch]
+=== 2 – Stateful Inspection
+
+** As the 'packets' traverse each row, look ONLY at the front of the envelope, the inside flap, and the color of the card to determine if you have rules to prevent this from being passed by you to the next person. If a packet is meant to be dropped, then hold onto it until the end to tell the class what packet was dropped and by what rule.
+
+** Everyone has a default deny for ICMP traffic.
+
+** Block any NEW inbound TCP DNS Connections.
+
+image::slide_background_fade.png[background, size=100%]
+[.stretch]
+=== 3 – Application Layer Gateway
+
+** As the 'packets' traverse each person, look at:
+front of the envelope, color of the card, and front of each card.  Determine if your rules prevent this packet from continuing. Return the card to the envelope.  Pass the packet along or hold it if meant to be dropped.  At the end tell the class what packets were dropped and by what rule.
+** Block any inbound packets with the word 'Malicious' on it.
+
+image::slide_background_fade.png[background, size=100%]
+== Filtering Intent
+
+[.stretch]
+image::T20_Filtering_Intent1.png[width=100%]
+
+image::slide_background_fade.png[background, size=100%]
+
+=== Filtering Intent
+
+[.stretch]
+image::T21_Filtering_Intent2.png[width=100%]
+
+image::slide_background_fade.png[background, size=100%]
+[.stretch]
+== Firewall Configuration Activity
+
+image::slide_background_fade.png[background, size=100%]
+[.stretch]
+== Router as a filter
+
+image::slide_background_fade.png[background, size=100%]
+[.stretch]
+=== ACL numbering & naming conventions
+
+image::T4a_ACL_Naming2.jpg[width=90%]
+
+image::slide_background_fade.png[background, size=100%]
+[.stretch]
+=== ACL creation
+----
+Demo> enable #enter privileged exec mode
+Demo# configure terminal #enter global config mode
+Demo(config)# access-list 37
+Demo(config)# access-list standard block_echo_request
+Demo(config)# access-list extended zone_transfers
+Demo(config)# access-list 123
+----
+
+What types of ACLs were created?
+
+image::slide_background_fade.png[background, size=100%]
+[.stretch]
+=== Standard ACL Syntax
+
+image::T5_Standard_ACL_Syntax.jpg[width=95%]
+
+
+----
+Demo(config-std-nacl)#  deny 8.0.0.0 0.255.255.255
+----
+
+image::slide_background_fade.png[background, size=100%]
+
+=== Extended ACL Syntax
+
+[.stretch]
+image::T8_Extended_ACL_Syntax.png[]
+
+image::slide_background_fade.png[background, size=100%]
+=== Interpreting extended ACLs
+
+{empty} +
+{empty} +
+
+----
+Demo# deny tcp any any eq telnet
+Demo# permit tcp any any eq 22
+Demo# deny tcp 10.0.0.2 host gt 1023 any
+Demo#  deny udp 172.169.1.1 host range 52-59 10.5.0.1 0.0.255.255 log
+Demo#  deny tcp 172.169.0.1 0.0.255.255 gt 1023 10.5.0.1 0.0.255.255 log
+----
+{empty} +
+What do these ACL entries accomplish?
+
+image::slide_background_fade.png[background, size=100%]
+[.stretch]
+=== ACL creation from prompt
+
+
+Commands required to create an ACL and ACEs and apply it to an interface.
+
+----
+Router1> enable
+Router1# configure terminal
+Router1(config)# ip access-list standard Another_Land
+Router1(config-std-nacl)# remark deny IP impersonation and log
+Router1(config-std-nacl)# deny 10.1.0.0 0.0.255.255 log
+Router1(config-std-nacl)# permit 10.0.0.0 0.255.255.255
+Router1(config-std-nacl)# end
+Router1(config)# interface fastethernet 0/0/0
+Router1(config-if)# ip access-group Another_Land in
+Router1(config)# end
+Router1# show ip access-list
+
+----
+
+image::slide_background_fade.png[background, size=100%]
+
+
+[.stretch]
+== ACL Placement
+
+
+image::T43_ACLplacementSlide1.jpg[width=100%]
+
+image::slide_background_fade.png[background, size=100%]
+
+[.stretch]
+=== ACL Placement
+
+
+image::T44_ACLplacementSlide2.jpg[width=100%]
+
+
+image::slide_background_fade.png[background, size=100%]
+
+
+[.stretch]
+=== ACL Placement
+
+image::T45_ACLplacementSlide3.jpg[width=100%]
+
+image::slide_background_fade.png[background, size=100%]
+
+[.stretch]
+=== Turbo ACLs
+
+image::T41_TurboACLchart.png[width=90%]
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+
+
+[.stretch]
+=== Flow Diagram
+
+image::T25_Flow_Diagram_edited4.png[height=580px]  #[width=90%]
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+
+[.stretch]
+== Intrusion Detection & Prevention Systems
+
+* Placement +
+** In line
+** or not
+
+* Recognition Methods
+** Signature
+** Heuristic aka Behavioral
+
+image::slide_background_fade.png[background, size=100%]
+[.stretch]
+== Snort IDS/IPS rule - header
+ * Action - such as alert, log, pass, drop, reject +
+ * Protocol - includes TCP, UDP, ICMP and others
+ * Source ICCNE013P address - single address, CIDR notation, range or any
+ * Source Port - one, multiple, any or range of ports +
+ * Direction - either inbound or in and outbound
+ * Destination IP address - options mirror Source IP +
+ * Destination port - options mirror Source port
+
+image::slide_background_fade.png[background, size=100%]
+
+[.stretch]
+=== Snort IDS/IPS rule - options:
+* Message - describes what the rule is doing
+* Flow - direction  and state of connection
+* Reference - links to external sources about the rule
+* Classtype - describe a successful attack
+* SID/rev - Unique Snort rule ID and rule revision
+
+image::slide_background_fade.png[background, size=100%]
+[.stretch]
+=== Snort IDS/IPS rule - options:
+* Content - searches for specific content in packet
+(the signature of what to match)
+* Distance/offset - where to start looking for content
+* Within/depth - where to look for additional content
+* Flags - searches TCP header flags
+* Priority - ranks level of concern
+
+image::slide_background_fade.png[background, size=100%]
+
+[.stretch]
+=== Snort rule example
+
+{empty} +
+{empty} +
+
+image::T10_Snort_Rule_Example.png[width=130%]
+
+image::slide_background_fade.png[background, size=100%]
+
+[.stretch]
+=== Rule Header
+
+{empty} +
+
+image::T11_Snort_Rule_Syntax1.png[width=100%]
+
+image::slide_background_fade.png[background, size=100%]
+
+[.stretch]
+=== Rule Options
+{empty} +
+
+image::T12_SnortRuleSyntax2.png[width=110%]
+
+image::slide_background_fade.png[background, size=100%]
+
+
+[.stretch]
+
+=== Rule Options
+
+{empty} +
+{empty} +
+
+image::T12b_SnortRuleSyntax4.png[width=110%]
+
+image::slide_background_fade.png[background, size=100%]
+
+
+[.stretch]
+== Snort Demonstration
+{empty} +
+
+Please follow along in your VMs
+
+image::slide_background_fade.png[background, size=100%]
+
+
+[.stretch]
+=== IDS Demo review
+{empty} +
+
+How would we discover if a network of interest is running IDS/IPS and why would be care?
+
+
+image::slide_background_fade.png[background, size=100%]
+
+
+[.stretch]
+=== IDS Demo review
+{empty} +
+
+If our units and organizations run Intrusion Detection and Prevention Systems, who else may run them?
+
+image::slide_background_fade.png[background, size=100%]
+
+
+== Other Common Intrusion Defense Systems
+
+
+[.stretch]
+image::T13_IDSList.jpg[width=110%]
+
+image::slide_background_fade.png[background, size=100%]
+
+[.stretch]
+== Activity
+{empty} +
+
+IDS Activity
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+[.stretch]
+=== IDS Activity Review
+
+{empty} +
+
+
+*_What IDS was running?_* +
+
+*_Where was the configuration located?_* +
+
+
+*_What were the rules run via the configuration?_* +
+
+
+image::slide_background_fade.png[background, size=100%]
+
+
+[.stretch]
+== Attacking & Evading IDS/IPS
+[.text-center]
+Based on Delta between devices +
+
+* Insertion Attack
+** IDS accepts packet
+** Host will not accept packet
+* Evasion Attacking
+** IDS does not accept packet
+** Host will accept packet
+
+image::slide_background_fade.png[background, size=100%]
+
+
+[.stretch]
+=== Technical Attacks on IDS/IPS
+* packet sequence manipulation
+* fragmenting payload
+* overlapping fragments with different reassembly by devices
+* Manipulating TCP headers
+* Manipulating IP options
+* Sending data during the TCP connection setup
+
+image::slide_background_fade.png[background, size=100%]
+
+[.stretch]
+=== Non-Technical attacks against IDS/IPS +
+{empty} +
+
+* attacking during periods of low manning +
+ Example - Ramadan 2012 Saudi Aramco attack +
+* attacking during a surge in activity +
+ Example - Target Corp. Point of Sale machines during the Thanksgiving-Christmas 2013 shopping season +
+
+image::slide_background_fade.png[background, size=100%]
+
+[.stretch]
+=== Strengthening Defensive Systems
+* Linking IDS/IPS to other tools
+* Multiconfig
+* Tuning
+* HIDS and File Integrity
+
+image::slide_background_fade.png[background, size=100%]
+
+[.stretch]
+== Host Based Filtering
+
+{empty} +
+{empty} +
+
+Linx host firewalls are... +
+
+{empty} +
+
+Windows host firewalls include...
+
+image::slide_background_fade.png[background, size=100%]
+
+
+[.stretch]
+== netfilter framework in Linux
+
+* packet filtering
+** stateless Firewalls
+**  stateful firewalls
+* network address and port translation (NAT and PAT)
+* other packet manipulation
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+[.stretch]
+=== netfilter paradigm
+
+1.  tables - contain chains
+2.  chains - contain rules
+3.  rules - dictate what to match and what actions to perform on packets when packets  match a rule
+
+image::slide_background_fade.png[background, size=100%]
+
+[.stretch]
+=== netfilter paradigm
+
+image::T30_NetfilerFrameHieracrchy.png[width=100%]
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+
+
+
+[.stretch]
+=== netfilter families
+ * ip - IPv4 packets +
+ * ip6 - IPv6 packets +
+ * inet - IPv4 and IPv6 packets +
+ * arp - layer 2 +
+ * bridge - processing traffic/packets traversing bridges. +
+ * netdev - allows for user classification of packets - nftables passes up to the networking stack +
+          (no counterpart in iptables)
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+[.stretch]
+=== Netfilter Families and Chains
+
+image::T32_Families&Hooks.png[]
+
+image::slide_background_fade.png[background, size=100%]
+
+
+[.stretch]
+=== NFTables Hook-Process Flow Diagram
+
+
+image::T31_NftablesFlow.png[width=100%]
+
+image::slide_background_fade.png[background, size=100%]
+
+[.stretch]
+=== Family-Chain-Hook
+image::T81_Fam_Chain_Hook.png[width=40%]
+
+image::slide_background_fade.png[background, size=100%]
+
+[.stretch]
+=== NetFilter Full Hierarchy
+image::T33_CompleteHeirarchy.png[width=75%]
+
+image::slide_background_fade.png[background, size=100%]
+
+[.stretch]
+== nftable enhancements
+
+* one table command to replace multiple
+* simpler, cleaner syntax
+* less code duplication
+* simultaneous configuration of IPv4 and IPv6
+
+image::slide_background_fade.png[background, size=100%]
+
+[.stretch]
+== Demonstration
+{empty} +
+
+IPtables & NFTables demonstration +
+
+{empty} +
+
+Please follow along in your VMs
+
+image::slide_background_fade.png[background, size=100%]
+
+[.stretch]
+=== Common iptable options
+
+image::T51_iptables_options.png[width=60%]
+
+image::slide_background_fade.png[background, size=100%]
+
+== Network and Port Address Translation
+
+* What do they do?
+* Compare & Contrast
+
+image::slide_background_fade.png[background, size=100%]
+
+[.stretch]
+=== Source PAT example
+{empty} +
+
+image::T16_Source_NAT_Graphic.png[width=100%]
+
+image::slide_background_fade.png[background, size=100%]
+
+[.stretch]
+=== Destination PAT example
+{empty} +
+
+image::T17_DestPAT_graphic.png[width=100%]
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+[.stretch]
+== iptables syntax
+{empty} +
+
+image::T57_IPtables_PAT_Syntax.png[width=100%]
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+[.stretch]
+=== nftables syntax
+{empty} +
+
+image::T56_nftables_PAT_Syntax.png[width=100%]
+
+image::slide_background_fade.png[background, size=100%]
+
+
+[.stretch]
+=== NAT & PAT operators & Chains
+
+image::T55_NAT&PAT_Chains.png[width=75%]
+
+image::slide_background_fade.png[background, size=100%]
+
+[.stretch]
+== Adding NAT table to nftables
+{empty} +
+
+----
+root@net1:/home/dcg# nft add table nat
+root@net1:/home/dcg#
+root@net1:/home/dcg# nft list tables
+table ip nat
+----
+
+image::slide_background_fade.png[background, size=100%]
+
+
+[.stretch]
+=== Link the NAT Table to chains
+{empty} +
+
+
+----
+root@net1:/home/dcg# nft add chain nat prerouting
+root@net1:/home/dcg# nft add chain nat postrouting
+----
+
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+
+
+
+[.stretch]
+=== Add rules
+{empty} +
+
+
+----
+root@net1:/home/dcg# nft add rule nat postrouting oif eth0 snat to 10.50.7.77
+
+root@net1:/home/dcg# nft add rule nat prerouting tcp dport 80 redirect to :8080
+
+----
+
+image::slide_background_fade.png[background, size=100%]
+
+
+[.stretch]
+== Activities
+
+{empty} +
+{empty} +
+
+*iptables and nftables* +
+
+*iptables and nftables with NAT*
+
+image::slide_background_fade.png[background, size=100%]
+
+[.stretch]
+== Discussion
+
+{empty} +
+{empty} +
+
+1. What are the effect of rules on traffic flow? +
+
+2. Compare and Contrast host based and network based filtering +
+
+image::slide_background_fade.png[background, size=100%]
+
+[.stretch]
+== Secure the Network Activity
+{empty} +
+{empty} +
+
+You will need to use ACLs and iptables or nftables to successfully complete this activity.
+
+image::slide_background_fade.png[background, size=100%]

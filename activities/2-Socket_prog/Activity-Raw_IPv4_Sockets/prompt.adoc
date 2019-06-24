@@ -1,0 +1,135 @@
+:doctype: book
+:stylesheet: ../../cctc.css
+
+= Activity - Raw IPv4 Sockets
+
+== Learning Objectives
+
+* SKILL CCNE013: Network Socket Communication
+** CCNE013.001 Understand socket types for network functions
+** CCNE013.002 Differentiate user space/kernel space sockets
+** CCNE013.003 Understand socket creation behavior based on privilege level
+** CCNE013.004 Implement Network Programming with Python3
+** CCNE013.005 Perform packet creation applying RFC implementation
+
+== Learning Outcomes
+
+* N/A
+
+== Scenario
+
+* You have administrative control (sudo privileges) on a Linux client (10.1.0.2) in an IPv4 network. You need to get a message to 10.3.0.2. You don't have tools installed, and installing new tools or libraries would trigger an alarm. The host has Python 3 installed, so you can use this to achieve your goal.  You can use the socket, sys, struct and one additional module of your choice. 
+* Using a python script, you will create a raw socket and code your message into the socket. This must be sent to the host at 10.3.0.2. You can verify success by using wireshark while you send the message on either the net1 or the target host.
+* Once this has been accomplished, you will send your packet to your "partner" (instructor provided IP of 10.50.X.X) who has wireshark or tcpdump running and looking for the specific TOS of 96 and IP ID of 1984 and your message to be encoded by hex.
+
+=== Task 1)
+
+* *Information gathering*
+
+. First, you will need to collect information in order to create the packet. The IP Header field info will need to be in decimal format; ensure you understand what should be represented within each field from a binary perspective, then convert this information to decimal.
+. Next, you should have the IP Header field size that will contain the information. You will need this in order to properly store the variables assigned with the values identified in step 1 into a structure.
+. Lastly, get the information about the python modules you are going to use. You know you will use socket, sys, as well as struct. You should also search for a module you can use to help encode the information for obfuscation. The following links are references for the socket and sys modules: 
+
+** https://docs.python.org/3/library/socket.html
+** https://docs.python.org/3/library/sys.html
+** https://docs.python.org/3/library/struct.html
+** https://docs.python.org/3/tutorial/errors.html
+
+=== Task 2)
+
+* *Start your script*
+
+. Create a script and start by importing the appropriate modules. Replace the ???? in the snippet with a module of your choice to use for encoding/obfuscating your message.
++
+----
+import socket, sys, ????
+from struct import *
+----
++
+. Start the program by using the socket module reference to create a raw socket; you can reference the errors module for error handling if desired:
++
+** The below snippet is an example of how to so this can be done. The snippet is not functional however; the CAPITALIZED items would need to be filled out appropriately. Reference the socket module to figure out what these values should be (check out the examples at the bottom, they are very helpful!).
++
+----
+try:
+    s = socket.FUNCTION(socket.FAMILY, socket.TYPE, socket.PROTOCOL)
+except socket.error as msg:
+    print('Socket creation failed! \nError Code - ' + str(msg))
+    sys.exit()
+----
++
+. Next you will need to create a packet with an IP header and a message. This will require a number of variables. You can use the following, or create your own list, as long as it can be arranged into a structure appropriately. See the struct module refernce on how to pack data into structures:
++
+** _Ensure you use "network" or big-endian for your byte order._
+** The snippet below is not funtional, but demonstrates how to initiate the packet, set data into the IP header fields, and shows an incomplete line for using the pack function.
++
+----
+packet = '';
+
+# IP Header fields
+source_ip = 'x.x.x.x'
+dest_ip = 'x.x.x.x'	
+ip_ver_ihl = ?
+# Continue adding any/all header fields that are required
+# Pack the fields into a structure
+ip_header = pack('!????????????' , ip_ver_ihl, header-field, header-field, header-field...)
+----
++
+. You will need to create user data (your last name) to insert into the packet (after the IP header) as well. This data will need to be encoded. You can use a module of your choice to achieve this, however a good place to start maybe the binascii module *as long as the final result is hex*.
+. The last part of the script will be creating your packet and sending your packet using the raw socket you have created.
++
+** The snippet below is not funtional, but demonstrates how to assemble the packet and send it.
++
+----
+packet = ip_header + user_data_variable
+ 
+s.OBJECT(packet, (dest_ip , 0 ))
+----
+
+=== Task 3)
+
+* *Send your packet*
+
+. You should have wireshark running when you send the packet so that you can verify that work script works.
+
+=== Task 4)
+
+* *Check your results*
+
+. You can retrieve a shell example of a script at: https://git.cybbh.space/CCTC/internal/raw/68-cctcv2-networking-raw-socket-programming/networking/Packet_Manipulation/Activity-Raw_IPv4_Sockets/RAWSOCK.py
+. Fill in all the areas with “?”. Read the Comments carefully!
+. After you have made your changes to the script, ensure you have permission to execute it. Bring up wireshark to view the packet and execute the script. As root, you can use "python3 RAWSOCK.py" to execute.
+. Were the results comparable to the script you created in Task 1-3?  If not, what was different?  
+. Your packet should not be "malformed" when looking at it with wireshark, and you should be able to take the data and decode it to see your last name.
+
+=== Task 5) 
+
+* *Send your packet to your partner*
+
+. You will need to change the target IP to 10.50.X.X which the instructor will provide, and set your TOS to 96 and IP ID to 1984.
+. Send the packet to that address. 
+. The instructor will decode your hex message in order to get your last name.
+
+=== Task 6)
+* *Verify your results*
+
+. Check with the instructor that your packet has been decoded sucessfully to get full credit for the activity.
+
+== Deliverables
+
+* Document your steps to fill in the script.
+* Screenshot showing successful communications between your Linux client and the message target at 10.3.0.2.
+* Screenshot showing how (and validating) that the message was somehow obfuscated for transmission.
+* Verification from the instructor that you have successfully sent the message and it has been decoded.
+
+== Hints
+
+* N/A
+
+== Challenge
+
+* N/A
+
+== Useful Resources
+
+* N/A

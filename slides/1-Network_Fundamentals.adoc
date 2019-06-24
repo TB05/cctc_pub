@@ -1,0 +1,731 @@
+= NETWORK FUNDAMENTALS
+CCTC - Networking
+v2.0, 2019-01-07
+//.images
+:slides: true
+:imagesdir: C:\Users\TB_Silotech\AppData\Local\Packages\CanonicalGroupLimited.Ubuntu18.04onWindows_79rhkp1fndgsc\LocalState\rootfs\root\cctc\network\cctc_networking\slides\images
+:source-highlighter: highlightjs
+:icons: font
+:revealjs_theme: black
+:title-slide-background-image: slide_title_blk.png
+:customcss: custom.css
+:revealjs_transition: convex
+:revealjs_backgroundTransition: none
+
+
+
+== OUTCOMES
+
+* SKILL CCNE001: Networking Fundamentals
+
+** CCNE001.001 Understanding the OSI model and Networking
+
+* SKILL CCNE002: Common Protocol Headers
+
+** CCNE002.001 Describe security implications present in common header fields
+
+* SKILL CCNE003: Layer 2 Switching Technologies
+
+** CCNE003.001 Explain Layer 2 Switching and CAM table
+
+** CCNE003.002 Explain CDP and LLDP
+
+** CCNE003.003 Understand VTP, STP, DTP
+
+** CCNE003.004 Discuss VLAN, 802.1q and 802.1ad
+
+** CCNE003.005 Identify and discuss security implications and mitigations for switching technologies
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+=== OUTCOMES Continued
+
+* SKILL CCNE004: Layer 3 Routing Technologies
+
+** CCNE004.001 Explain Layer 3 Routing
+
+** CCNE004.002 Discuss Routing Tables
+
+** CCNE004.003 Understand HSRP and VRRP
+
+** CCNE004.004 Describe Software Defined Networking
+
+** CCNE004.005 Discuss static and dynamic routing
+
+** CCNE004.006 Identify and discuss security implications and mitigations for routing technologies
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+== Basic Fundamentals
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+=== Mathematics of networking
+
+Binary Identification
+
+
+image:Bits_Nibbles_Bytes.png[height=500px]
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+=== Mathematics of networking
+
+Binary Identification
+
+
+image:Bit_Grouping.png[Float=center]
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+=== Binary Conversion
+
+
+image::Binary_Decimal_Hex.png[Float=center, height=580px]
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+=== MESSAGE FORMATTING METHOD
+
+Encapsulation and Decapsulation
+
+
+image::PDU_SDU.png[Float=center, height=500px]
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+=== OSI MODEL
+
+image::OSI.png[Float=center, height=580px]
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+== Physical LAYER
+
+OSI LAYER 1 
+
+image::slide_background_fade.png[background, size=100%]
+
+
+=== Physical Layer Responsibilities
+
+* Hardware Specifications
+* Encoding and Signaling
+* Data Transmission and Reception
+* Physical Network Design
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+== DATA LINK LAYER
+
+OSI LAYER 2
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+
+=== Data Link Sub-Layers
+
+* MAC (Media Access Control)
+
+* LLC (Logical Link Control)
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+=== Ethernet Header
+
+image:EthernetFramePreamble.png[height=100px]
+image:Ethernet_II_Frame.png[width=1600,height=250]
+image:CommonEthertypes.png[height=150px]
+
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+=== 802.1q Header
+
+[.stretch]
+image::802.1QFrame.png[]
+
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+=== ARP HEADER
+
+
+image::ARP_Header.png[height=580px]
+
+
+image::slide_background_fade.png[background, size=100%]
+
+
+=== ACTIVITY
+
+link:https://git.cybbh.space/CCTC/public/builds/artifacts/master/raw/networking/Activity-Scapy_for_ARP/prompt.pdf?job=genpdf[SCAPY for ARP]
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+== NETWORK LAYER
+OSI LAYER 3
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+
+=== IPv4 HEADERS
+
+
+image::IPv4_Header.png[height=580px]
+
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+
+=== FRAGMENTATION PROCESS
+
+
+image::Fragmentation.png[height=580px]
+
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+
+=== IPv6 HEADERS
+
+
+image::IPv6_Header.png[height=580px]
+
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+=== IPv4/IPv6 Header Comparison
+
+Comparison Outlook
+
+
+image::IPv4_vs_IPv6_Header.png[height=500px]
+
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+
+=== Fingerprinting
+
+Vendors have chosen different values for TTL which can provide insight to which OS family a generated packet is from.
+
+
+image::Default_TTL.png[]
+
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+
+=== ICMP HEADER
+
+[.stretch]
+image::ICMPHeader.png[]
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+=== Zero Configuration
+
+....
+
+
+IPv4 Auto Configuration
+
+* APIPA
+
+* RFC 3927
+
+
+IPv6 auto configuration
+
+* SLAAC(StateLess Address AutoConfiguration)
+
+* RFC 4862
+
+
+....
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+=== ACTIVITY
+
+link:https://git.cybbh.space/CCTC/public/builds/artifacts/master/raw/networking/Activity-ICMPv6_RA_with_Scapy/prompt.pdf?job=genpdf[SCAPY for ARP]
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+== TRANSPORT LAYER
+
+OSI LAYER 4
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+=== TCP HEADERS
+
+
+image::TCPHeader.png[height=580px]
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+=== TCP FLAGS
+
+
+image::TCPFlagsBPF.png[]
+
+TCP Flag Breakout (Binary and Hex)
+
+Collection of Exceptionally Unskilled Attackers Pester Real Security Folks
+
+Coach Explained to the University of Alaska to Play Really Snowy Football
+
+
+image::slide_background_fade.png[background, size=100%]
+
+
+=== TCP States
+
+
+image::TCPchart.png[height=580px]
+image::slide_background_fade.png[background, size=100%]
+
+
+
+=== TCP Connections
+
+image::TCPstates.png[height=580px]
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+=== UDP HEADERS
+
+
+image::UDPHeader.png[]
+
+image::slide_background_fade.png[background, size=100%]
+
+
+== Session LAYER
+
+OSI LAYER 5
+
+image::slide_background_fade.png[background, size=100%]
+
+
+=== Protocols
+
+* SOCKS
+* NetBIOS
+* PPTP/L2TP 
+* RPC
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+== Presentation LAYER
+
+OSI LAYER 6
+
+image::slide_background_fade.png[background, size=100%]
+
+
+=== Responsibilities
+
+* Translation
+* Formating
+* Encryption
+* Compression
+
+image::slide_background_fade.png[background, size=100%]
+
+
+== Application LAYER
+
+OSI LAYER 7
+
+image::slide_background_fade.png[background, size=100%]
+
+
+=== Protocols
+
+* HTTP (80)
+* SSL/TLS (443)
+* Telnet (23)
+* SSH (22)
+* FTP (20/21)
+* TFTP (69)
+* DHCP (67/68)
+* DNS (53)
+
+
+image::slide_background_fade.png[background, size=100%]
+
+
+== LAYER 2 SWITCHING TECHNOLOGIES
+
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+=== SWITCH OPERATION
+
+* Fast Forward - Only Destination MAC
+
+* Fragement Free - First 64 bytes
+
+* Store and Forward - Entire Frame and FCS
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+
+=== CAM TABLE
+
+
+image::MACTable.png[height=400px]
+
+* Learn - Examining the Source MAC Address
+* Forward - Examining the Destination MAC Address
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+
+=== VLANS and IEEE 802.1Q
+
+
+image::802.1QFrame.png[]
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+=== IEEE 802.1AD "Q-in-Q"
+
+
+image::802.1adFrame.jpg[]
+
+image::doubletags.png[height=150px]
+
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+=== SPANNING TREE PROTOCOL (STP)
+
+Root decision process
+
+* 1. Elect root Bridge
+* 2. Identify the Root ports on non-root bridge
+* 3. Identify the Designated port for each segment
+* 4. Set alternate ports to blocking state
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+=== SPANNING TREE PROTOCOL (STP)
+
+
+image::Spanning-Tree-Protocol-Overview.png[height=500px]
+
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+=== LAYER 2 DISCOVERY PROTOCOLS
+
+
+* Cisco Discovery Protocol (CDP)
+
+* Foundry Discovery Protocol (FDP)
+
+* Link Layer Discovery Protocol(LLDP)
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+
+=== DTP (Dynamic Trunking Protocol)
+
+
+image::DTP_Chart.png[height=500px]
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+=== VTP (Virtual Trunking Protocol)
+
+
+image::VTP.png[height=500px]
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+=== PORT SECURITY
+
+
+Modes
+
+* shutdown
+
+* restrict
+
+* protect
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+== LAYER 3 ROUTING TECHNOLOGIES
+
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+=== ROUTING
+
+
+image::ip_routing_example.jpg[height=500px]
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+=== ROUTING TABLES
+
+
+image::Routing_table.png[height=500px]
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+=== ANATOMY
+
+
+image::Route_Types.png[height=500px]
+
+image::slide_background_fade.png[background, size=100%]
+
+
+=== LOOKUP PROCESS
+
+
+image::Bit_Match.jpg[height=500px]
+
+image::slide_background_fade.png[background, size=100%]
+
+
+=== ROUTED vs ROUTING
+
+
+image::routed_routing.png[height=500px]
+
+image::slide_backgrounds/slide_background_fade.png[background, size=100%]
+
+
+
+=== FIRST HOP REDUNDANCY PROTOCOLS
+
+
+image::FHRP.jpg[height=500px]
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+
+=== SOFTWARE DEFINED NETWORKING
+
+
+image::SDN.png[height=500px]
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+
+=== SOFTWARE DEFINED NETWORKING
+
+
+image::SDN2.png[height=500px]
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+
+=== ADMINISTRATIVE DISTANCE
+
+
+image::AD.png[height=300px]
+
+
+image::Table_Entry.jpg[height=200px]
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+=== Metrics
+
+* Hop
+* Bandwidth
+* Delay
+* Load
+* MTU
+* Reliability
+* Cost
+* Policy
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+=== STATIC ROUTING
+
+
+image::Static.jpg[height=500px]
+
+image::slide_background_fade.png[background, size=100%]
+
+
+=== STATIC ADVANTAGES AND DISADVANTAGES
+
+
+image::staticAD.png[height=500px]
+
+image::slide_background_fade.png[background, size=100%]
+
+
+=== DYNAMIC ROUTING
+
+
+image::Dynamic_Routing.jpg[height=580px]
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+=== DYNAMIC ADVANTAGES AND DISADVANTAGES
+
+
+image::dynamicAD.png[height=500px]
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+=== ROUTING PROTOCOL COMPARISON
+
+
+image::dynamic_table.png[height=500px]
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+
+=== IGP AND EGP
+
+
+image::IGP_EGP.jpg[height=580px]
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+=== CONTROLLING ENTITIES
+
+
+image::iana.png[height=580px]
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+=== DISTANCE VECTOR
+
+
+image::DV.png[height=580px]
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+=== LINK STATE
+
+image::LS.jpg[height=580px]
+
+image::slide_background_fade.png[background, size=100%]
+
+
+
+
+
+=== ACTIVITY
+
+link:https://git.cybbh.space/CCTC/public/builds/artifacts/master/raw/networking/Activity-Follow_a_packet_through_a_network/prompt.pdf?job=genpdf[Follow a Packet Through the Network]
+
+image::slide_background_fade.png[background, size=100%]

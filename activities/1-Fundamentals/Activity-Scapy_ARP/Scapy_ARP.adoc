@@ -1,0 +1,255 @@
+:doctype: book
+:stylesheet: ../../global-objects/resources/raw/master/css/stylefactoryfiles/_asciidoc.scss
+:icons: image
+:icondir: ../Images/adoc_icons
+
+image::https://git.cybbh.space/global-objects/resources/raw/master/images/USACYSup001.png[Cyber,180,141]
+
+{empty} +
+
+Version Date: 14 November 2018
+
+{empty} +
+
+= Activity - Scapy for ARP
+
+Scapy is a python based tool for packet crafting developed by Phillipe Biordi. It can easily manipulate any layer of the TCP/IP stack, even the application data.
+
+Scapy is maintained at https://github.com/secdev/scapy.
+
+This activity is performed using the net1 host to interact with win1_net2 in the Openstack environment.
+
+[blue]#_Note: Resources have been provided at the end of this document to assist you if needed. However, you should attempt this activity initially without using the resources._#
+
+== Learning Objectives
+
+* SKILL CCNE001: Networking Fundamentals ¹ ²
+** CCNE001.001 Understanding the OSI model and Networking ¹
+* SKILL CCNE002: Network Header fields ¹ ²
+** CCNE002.001 Describe security implications present in header fields ²
+* SKILL CCNE003: Layer 2 Switching Technologies ¹ ²
+
+=== Outcomes
+
+* By the end of the activity, students will have an understanding of the implication of insecure helper protocols used in layer 2 of the OSI model. Students will use sniffing tools to analyze normal protocol interaction. Students will apply their comprehension to packet crafting with Scapy in interactive shell mode to manipulate header contents and perform cache poisoning. Students will assess their effectiveness through analysis of tables which cache the information.
+
+{empty} +
+
+---
+
+*Initial setup:*
+
+[red]#Check scapy installation#
+
+* Type "scapy" to ensure it is installed, if not install using "sudo apt-get install scapy". Exit Scapy once you have verified it is installed by using "exit()".
+
+[red]#Configure hosts to accept ARP#
+
+* Turn on ARP_ACCEPT
+
+----
+cat /proc/sys/net/ipv4/conf/all/arp_accept
+----
+
+This is 0 by default, change it to 1 by performing the following:
+
+----
+echo 1 > /proc/sys/net/ipv4/conf/all/arp_accept
+----
+
+[red]#Flush ARP Caches#
+
+Run the following commands: +
+
+----
+sudo ip nei
+----
+
+_this command allows you to see your current ARP cache_
+
+----
+sudo ip -s -s neigh flush all
+----
+
+_This command will flush your ARP table_
+
+Ensure that your table is flushed using the command below:
+
+----
+sudo ip nei
+----
+
+{empty} +
+
+---
+
+*Generate network traffic:*
+
+[red]#Create an ARP request and generate a pcap for examination.# +
+
+Run the following commands:
+
+----
+sudo tcpdump "arp and host 10.1.0.3" -w arp.pcap
+----
+_This command creates a filter for ARP traffic  and net2, then writes it to the arp.pcap file._
+
+Now, ping the net2 to generate an ARP request and response.
+
+* Ensure you successfully performed an ARP request and received a response
+Run the command: +
+
+----
+ip nei
+----
+
+The arp table should have populated with net 2 (10.1.0.3) and it's associated MAC.
+
+----
+sudo tcpdump -r arp.pcap -c 2 -w arp.pcap
+----
+
+_This reads the pcap file with tcpdump and outputs the results for the first 2 records and writes it to a new file named ARP.pcap._
+
+[blue]#_Note: When reading pcaps you may use non-root privileges, if you are crafting traffic with the intent of sending it over the network you must use root privileges due to raw socket creation._#
+
+{empty} +
+
+Ensure you hae a proper request and response:
+----
+tcpdump -r arp.pcap -v
+----
+
+
+---
+
+*Read a packet capture with Scapy:*
+
+[red]#Read a packet capture and assign it to a variable.# +
+
+Start Scapy
+----
+scapy
+----
+
+* Open your pcap with Scapy
+Perform the following:
+
+----
+r = rdpcap("arp.pcap")
+r[0]
+----
+this assigns the variable "r" to the pcap you created and begins reading at record 0 with "r[0]"
+
+Examine the output for the ARP request.
+
+[underline]#Deliverable:# +
+
+Armed with what you know so far, read the ARP response and provide the output.
+
+{empty} +
+
+---
+
+*Packet Crafting with Scapy* +
+
+Now that you have examined what a normal ARP request and response looks like, it is time to craft a gratuitous ARP. This can be used for spoofing and manipulating ARP caches. +
+
+Before you do this however, some basic Scapy knowledge is needed. Perform the steps below to gain a better understanding of how to assign attributes to header objects in Scapy.
+
+Setup:
+
+[red]#Examine fields in a given header# +
+* Perform the following commands and examine their outputs: +
+
+----
+ls(Ether)
+ls(ARP)
+ls(IP)
+ls(TCP)
+ls(UDP)
+----
+
+The objects are Ether, ARP, IP, TCP, and UDP. When listed you can see the attribute fields that may be changed for each header object. +
+
+[red]#Assign names to objects#
+
+You must first create an association of the "Ether()" object with the name of "ether". +
+----
+ether=Ether()
+----
+
+Now, fill in the appropriate attribute fields for the ethernet header object: +
+
+[blue]#_Note: Be sure to use ":" for your MAC address or Scapy will not interpret your values correctly._# +
+
+[red]#Assign values to attribute fields#
+----
+ether.src= "your MAC address"
+ether.dst= "what type of destination addresses do ARP requests use?"
+ether.type= Ethertype for ARP  *without quotes*
+----
+
+Check your ethernet header object by performing the following command:
+----
+ether.show()
+----
+
+Now, use information from your previous observations to create the rest of your gratuitous ARP. Continue to assign the appropriate header object and attribute fields. +
+
+Craft your spoofed source MAC address in your ARP header as "FEEDDEADBEEF" and craft your destination as the net2 host.
+
+[blue]#_Note: Scapy is case sensitive, if you name variables with the same name as the header object be sure to use lower case. If you fail to do so, you will encounter errors._# +
+
+[red]#Stack header objects and assign a name#
+
+Stack your header objects for encapsulation using the format "eth/arp" and using a descriptive name such as "GRATUITOUS".
+
+----
+GRATUITOUS=ether/arp
+----
+
+Now, write your record to a pcap file.
+
+----
+wrpcap("/tmp/gratuitous.pcap", GRATUITOUS)
+----
+
+In a new tab, open your gratuitous.pcap file and examine it in Wireshark. +
+
+----
+wireshark /tmp/gratuitous.pcap
+----
+
+Wireshark will highlight if anything is wrong with the packet you have just created, if you need to make any adjustments go ahead, if not move on to the next step.
+
+Check the ARP cache on the win1_net2 host for comparison before you send your crafted packet in the next step.
+
+Send the traffic to the network by stacking your header objects and specifying an interface. +
+
+----
+sendp(ether/arp, iface="eth0")
+----
+
+{empty} +
+
+---
+
+*Check Your Work and Analyze the Results* +
+
+Look at the ARP table on the net2 host. You should see that it has accepted your spoofed MAC address. +
+
+Congratulations, you have successfully performed ARP cache poisoning on the net2 host. While the mac addressed used is not something you would likely see in a real environment, it is easily distinguishable in the ARP table. +
+
+Network devices accept ARP messages without performing any authentication. ARP caches can be poisoned easily. This is often automated through tools such as ettercap to perform a man in the middle attack for sniffing traffic.
+
+== Hints
+* N/A
+
+== Challenge
+* Create a script to send ARP packets to an entire subnet range, to automate the host discovery process.
+* Try crafting packets to poison the ARP table/cache in the Windows client with the default gateway's information pointing to net1. This will redirect traffic to your net1 host for a moment.
+
+== Useful Resources
+* https://Scapy.readthedocs.io/en/latest/index.html
+* https://Scapy.net/

